@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include <string>
+
 #include "Clienta.h"
 #include "Prenda.h"
 #include "Cursor.h"
@@ -20,24 +21,24 @@ const int ANCHO = 120;
 const int ALTO = 40;
 const int DELAY = 30;
 
-//------variables globales
-bool salir;
-bool mostrar_menu;
-bool game_over;
-int puntaje;
+//------variables globales ( estados )
+bool salir = false;
+bool mostrar_menu = true;
+bool game_over = false;
+int puntaje = 0;
+WINDOW* winClienta = 0;
 
+//----------objetos 
+Tienda tienda1;
 Cursor cursor1;
 Clienta clienta1;
 Flechas flechas1;
-SentidoFlecha flechaActual =
-    SentidoFlecha::IZQUIERDA;
+SentidoFlecha flechaActual = SentidoFlecha::IZQUIERDA;
 
 int clientaElegida;
 bool seleccionandoPrenda = false;
 int categoriaActual = 0;
 int prendaActual = 0;
-
-std::vector<std::vector<Prenda>> catalogo;
 
 
 //------funciones globales
@@ -48,96 +49,18 @@ void setup();
 void input();
 void update();
 void draw();
+void drawCatalogo();
 void gameover();
-
-std::vector<std::vector<Prenda>> crearCatalogo()
-{
-    using C = CategoriaPrenda;
-
-    return {
-        {
-            Prenda("Vestido elegante", "Elegante", "Negro", 900,
-                   C::VESTIDOS,
-                   {" /\\ ", "/##\\", "/__\\ "}),
-
-            Prenda("Vestido corto", "Casual", "Rojo", 700,
-                   C::VESTIDOS,
-                   {" /\\ ", "|()|", "/__\\ "}),
-
-            Prenda("Vestido floral", "Romantico", "Rosa", 850,
-                   C::VESTIDOS,
-                   {" /\\ ", "|**|", "/\\/\\ "}),
-
-            Prenda("Vestido de fiesta", "Fiesta", "Dorado", 1200,
-                   C::VESTIDOS,
-                   {" /\\ ", "|@@|", "/==\\ "})
-        },
-
-        {
-            Prenda("Tacos muy altos", "Elegante", "Negro", 1100,
-                   C::ZAPATOS,
-                   {" __ ", "/_/ ", "\\__ "}),
-
-            Prenda("Zapatillas urbanas", "Casual", "Blanco", 650,
-                   C::ZAPATOS,
-                   {" __ ", "/##\\", "\\___"}),
-
-            Prenda("Botas altas", "Urbano", "Marron", 950,
-                   C::ZAPATOS,
-                   {" |\\ ", " |#|", "/___"}),
-
-            Prenda("Sandalias", "Verano", "Dorado", 500,
-                   C::ZAPATOS,
-                   {" __ ", "\\##/", " \\/ "})
-        },
-
-        {
-            Prenda("Pollera corta", "Casual", "Azul", 600,
-                   C::PARTES_DE_ABAJO,
-                   {"____", "\\##/", " \\/ "}),
-
-            Prenda("Jean recto", "Urbano", "Azul", 750,
-                   C::PARTES_DE_ABAJO,
-                   {" || ", " || ", "/__\\"}),
-
-            Prenda("Short de verano", "Verano", "Blanco", 450,
-                   C::PARTES_DE_ABAJO,
-                   {"____", "\\  /", " \\/ "}),
-
-            Prenda("Pantalon sastrero", "Elegante", "Negro", 900,
-                   C::PARTES_DE_ABAJO,
-                   {" || ", "/##\\", "/__\\"})
-        },
-
-        {
-            Prenda("Remera manga corta", "Casual", "Blanco", 450,
-                   C::PARTES_DE_ARRIBA,
-                   {" __ ", "/##\\", "\\__/"}),
-
-            Prenda("Camisa manga larga", "Elegante", "Celeste", 800,
-                   C::PARTES_DE_ARRIBA,
-                   {" __ ", "|##|", "|__|"}),
-
-            Prenda("Top", "Verano", "Rosa", 400,
-                   C::PARTES_DE_ARRIBA,
-                   {" __ ", "\\##/", " \\/ "}),
-
-            Prenda("Sweater", "Abrigo", "Verde", 700,
-                   C::PARTES_DE_ARRIBA,
-                   {" __ ", "/@@\\", "\\__/"})
-        }
-    };
-}
 
 
 int main() 
 {
 	srand(time(0));
+
 	initscr(); 
 	noecho();
 	curs_set(false);
 	keypad(stdscr, true);
-	nodelay(stdscr, true);
 
 // check terminal 
 	if (LINES < ALTO || COLS < ANCHO)
@@ -147,75 +70,88 @@ int main()
 		exit(1);
 	}
 
-  salir = false;
-  mostrar_menu = true;
-  game_over = true;
-    
+    int altoWin = 35; 
+    int anchoWin = 53; 
+    int posY = 1;
+    int posX = 66;
+
+    winClienta = newwin(altoWin, anchoWin, posY, posX);
+
+    tienda1.setup();
+
 //BUCLE PRINCIPAL
   while (!salir)
-	{
-    while (mostrar_menu)
+{
+    if (mostrar_menu)
     {
+      nodelay(stdscr, false);
       menu();
     }
-
-    while (!game_over)
+    else if (!game_over)
     {
-			input();
-			update();
-			draw();
-		}
+        nodelay(stdscr, true);
+		input();
+		update();
+		draw();
+        delay_output(DELAY);
+	    }
+    else {
+        nodelay(stdscr, false);
+        gameover();
+    }
+}
 
-    if (game_over) gameover();
-	}
+delay_output(DELAY); 
 
-  endwin();
-
-	cout << endl;
+    if(winClienta) delwin (winClienta);
+    endwin();
 	return 0;
 }
 
 void menu()
 {
+
 erase();
-mvprintw(3, 50, "BOUT(CL)IQUE");
-mvprintw(4, 65, "+@@@@:");
-mvprintw(5, 40, ":@@@@@=                 @@@@@@@:");
-mvprintw(6, 39, "@@@@@@@@@                @@@@@@@:");
-mvprintw(7, 39, "@@@@@@@@@@                -@@@@@.");
-mvprintw(8, 39, "@@@@@@@@@@              -@@@@@");
-mvprintw(9, 40, "+@@@@@@@@              @@@@@@@@.");
-mvprintw(10, 43, "@@@@@@              @@@@@@@@:");
-mvprintw(11, 39, "-@@@@@@@@@*             @@@@@@@@");
-mvprintw(12, 39, "@@@@@@@@@@*             @@@@@@@@");
-mvprintw(13, 38, ":@@@@@@@@@@              @@@@@@@@.");
-mvprintw(14, 38, ":@@@@@@@@@@              @ @@@@@@@");
-mvprintw(15, 38, "@@@@@@@= @@             @ =@@@@@@@@");
-mvprintw(16, 37, "@@@@@@@@@               %@#=@@@@@@@@@");
-mvprintw(17, 37, "@@@@@@@@@@               @  *@@@@@@@#");
-mvprintw(18, 37, "@@@@@@@@@@@*                  @@@@@@");
-mvprintw(19, 36, "#@@@@@@@@@@@@-                 .@@@@@");
-mvprintw(20, 38, "@@@@@@@@@@@@                @@: #@@");
-mvprintw(21, 38, "@@@@@@@@@@@@=              @@    @@");
-mvprintw(22, 38, "@@@@@@@@@@@@=              @:    @@");
-mvprintw(23, 38, "=@@@@-@@@@               :@=      @");
-mvprintw(24, 40, "@@  @@@                @@       @-");
-mvprintw(25, 40, "@@@  @@@                        @@");
+
+mvprintw( 3, 45,    "BOUT(CL)IQUE");
+mvprintw( 4, 45, "                                  +@@@@:           ");
+mvprintw( 5, 45, "         :@@@@@=                 @@@@@@@:          ");
+mvprintw( 6, 45, "        @@@@@@@@@                @@@@@@@:          ");
+mvprintw( 7, 45, "        @@@@@@@@@@                -@@@@@.          ");
+mvprintw( 8, 45, "        @@@@@@@@@@              -@@@@@             ");
+mvprintw( 9, 45, "         +@@@@@@@@              @@@@@@@@.          ");
+mvprintw(10, 45, "            @@@@@@              @@@@@@@@:          ");
+mvprintw(11, 45, "        -@@@@@@@@@*             @@@@@@@@           ");
+mvprintw(12, 45, "        @@@@@@@@@@*             @@@@@@@@           ");
+mvprintw(13, 45, "       :@@@@@@@@@@              @@@@@@@@.          ");
+mvprintw(14, 45, "       :@@@@@@@@@@              @ @@@@@@@          ");
+mvprintw(15, 45, "       @@@@@@@= @@             @ =@@@@@@@@         ");
+mvprintw(16, 45, "       @@@@@@@@@@-             @ @@@@@@@@@         ");
+mvprintw(17, 45, "      @@@@@@@@@               #@#=@@@@@@@@@        ");
+mvprintw(18, 45, "      @@@@@@@@@@               @  *@@@@@@@#        ");
+mvprintw(19, 45, "      @@@@@@@@@@@*                  @@@@@@         ");
+mvprintw(20, 45, "     #@@@@@@@@@@@@-                 .@@@@@         ");
+mvprintw(21, 45, "      @@@@@@@@@@@@@                .@@*#@@         ");
+mvprintw(22, 45, "       @@@@@@@@@@@@                @@: #@@         ");
+mvprintw(23, 45, "       @@@@@@@@@@@@=              @@    @@         ");
+mvprintw(24, 45, "       @@@@@@@@@@@@=              @:    @@         ");
+mvprintw(25, 45, "       =@@@@-@@@@               :@=      @         ");
 
 mvprintw(27, 58, "MENU");
 mvprintw(29, 54, "1 - JUGAR");
-mvprintw(32, 54, "4 - SALIR");
+mvprintw(32, 54, "2 - SALIR");
 
-  char opcion = getch();
+refresh();
 
-  switch (opcion)
+char opcion = getch();
+
+ switch (opcion)
   {
   case '1':
     mostrar_menu = false;
     setup();
     break;
   case '2':
-    mostrar_menu = false;
 		salir = true;
     break;
   default:
@@ -229,20 +165,18 @@ void setup()
 	game_over = false;
 	puntaje = 0;
 
-	catalogo = crearCatalogo();
+    tienda1.setup();
+
     seleccionandoPrenda = false;
     categoriaActual = 0;
     prendaActual = 0;
-    flechaActual =
-        SentidoFlecha::IZQUIERDA;
+    flechaActual = SentidoFlecha::IZQUIERDA;
+
     cursor1.setup();
     flechas1.setup();
     clientaElegida = rand() % 5;
 
-    //Tienda.setup();
 }
-
-
 
 
 void input()
@@ -256,7 +190,6 @@ void input()
         {
             // Volver a las cuatro categorias
             seleccionandoPrenda = false;
-            categoriaActual = categoriaActual;
 
             cursor1.setX(
                 (categoriaActual % 2 == 0) ? 15 : 45
@@ -277,55 +210,42 @@ void input()
     // Pantalla categorias
     if (!seleccionandoPrenda)
     {
-        if (tecla == KEY_LEFT &&
-            categoriaActual % 2 == 1)
+        switch(tecla)
         {
-            categoriaActual--;
-        }
+        case KEY_LEFT: 
+            if(categoriaActual % 2 == 1) categoriaActual--;
+            break;
+        
+        case KEY_RIGHT:
+            if(categoriaActual % 2 == 0) categoriaActual++;
+            break;
 
-        if (tecla == KEY_RIGHT &&
-            categoriaActual % 2 == 0)
-        {
-            categoriaActual++;
-        }
+        case KEY_UP:
+            if(categoriaActual >= 2) categoriaActual -= 2;
+            break;
 
-        if (tecla == KEY_UP &&
-            categoriaActual >= 2)
-        {
-            categoriaActual -= 2;
-        }
-
-        if (tecla == KEY_DOWN &&
-            categoriaActual < 2)
-        {
-            categoriaActual += 2;
-        }
-
-        // Mover el cursor a la categoria actual
-        cursor1.setX(
-            (categoriaActual % 2 == 0) ? 15 : 45
-        );
-
-        cursor1.setY(
-            (categoriaActual < 2) ? 5 : 15
-        );
-
-        // Enter para entrar a la categoria
-        if (tecla == KEY_ENTER ||
-            tecla == '\n')
-        {
+        case KEY_DOWN:
+            if(categoriaActual < 2) categoriaActual += 2;
+            break;
+        
+        case KEY_ENTER:
+        case '\n': 
             seleccionandoPrenda = true;
-            prendaActual = 0;
-            flechaActual =
-                SentidoFlecha::IZQUIERDA;
+            prendaActual= 0;
+            flechaActual = SentidoFlecha::IZQUIERDA;
 
-            cursor1.setX(
-                flechas1.getX(flechaActual)
-            );
+            cursor1.setX(flechas1.getX(flechaActual));
+            cursor1.setY(flechas1.getY());
+            break;
 
-            cursor1.setY(
-                flechas1.getY()
-            );
+        default: 
+            break;
+        }
+
+        if (tecla == KEY_LEFT || tecla == KEY_RIGHT ||tecla == KEY_UP || tecla == KEY_DOWN)
+        {
+            cursor1.setX((categoriaActual % 2 == 0) ? 15 : 45);
+           cursor1.setY((categoriaActual < 2) ? 5 : 15);  
         }
 
         return;
@@ -333,59 +253,52 @@ void input()
 
     // Pantalla de una prenda con las dos flechas
 
-    if (tecla == KEY_LEFT)
+    switch (tecla)
     {
-        flechaActual =
-            SentidoFlecha::IZQUIERDA;
-    }
+        // carrusel va izq o der
+       case KEY_LEFT:
+        flechaActual = SentidoFlecha::IZQUIERDA;
+        cursor1.setX(flechas1.getX(flechaActual));
+        cursor1.setY(flechas1.getY());
+        break;
 
-    if (tecla == KEY_RIGHT)
-    {
-        flechaActual =
-            SentidoFlecha::DERECHA;
-    }
+        case KEY_RIGHT:
+         flechaActual = SentidoFlecha::DERECHA;
+         cursor1.setX(flechas1.getX(flechaActual));
+         cursor1.setY(flechas1.getY());
+         break;
 
-    // Mover el cursor a la flecha elegida
-    cursor1.setX(
-        flechas1.getX(flechaActual)
-    );
-
-    cursor1.setY(
-        flechas1.getY()
-    );
-
-    // Enter sobre una flecha
-    if (tecla == KEY_ENTER ||
-        tecla == '\n')
-    {
-        if (flechaActual ==
-            SentidoFlecha::IZQUIERDA)
+         case KEY_ENTER:
+         case '\n':
+            if (flechaActual == SentidoFlecha::IZQUIERDA)
         {
             if (prendaActual == 0)
                 prendaActual = 3;
             else
-                prendaActual--;
+                prendaActual--; 
         }
-        else
-        {
+        else {
             prendaActual++;
-
             if (prendaActual > 3)
                 prendaActual = 0;
         }
+        break;
+
+         default:
+        break;
     }
+
 }
 
 void update()
 {
-
+//logica de actualizacion
 }
 
 void drawCatalogo()
 {
     if (!seleccionandoPrenda)
     {
-        // Interfaz de selección de categoría
         mvprintw(4, 15, "1. Vestidos");
         mvprintw(4, 45, "2. Zapatos");
         mvprintw(14, 15, "3. Partes de Abajo");
@@ -397,7 +310,7 @@ void drawCatalogo()
         flechas1.draw();
 
         // Obtener la prenda actual basándonos en los índices
-        const Prenda& prendaMostrada = catalogo[categoriaActual][prendaActual];
+        const Prenda& prendaMostrada = tienda1.getPrenda(categoriaActual, prendaActual);
 
         // Dibujar el arte ASCII de la prenda entre las flechas
         prendaMostrada.draw(6, 26); 
@@ -409,27 +322,26 @@ void drawCatalogo()
         mvprintw(16, 16, "[ENTER] Seleccionar");
         mvprintw(17, 16, "[ESC]   Volver");
     }
-}
+} 
 
 void draw()
 {
     erase();
     box(stdscr, 0, 0);
 
-    mvprintw(0, 80, "[ EXITO:     ]");
-    mvprintw(0, 100, "[ DINERO:$     ]");
+    mvprintw(0, 80, "[ EXITO: %d    ]", puntaje);
+    mvprintw(0, 100, "[ DINERO:$ %d    ]", tienda1.getDinero());
 
-    // Dibuja la clienta a la derecha
-    clienta1.draw(clientaElegida);	
+    clienta1.draw(winClienta, clientaElegida);	
 
-    // Renderiza el menú o el carrusel a la izquierda
     drawCatalogo();
-
-    // Dibuja el cursor interactivo
     cursor1.draw();
 
-    refresh();
-    delay_output(DELAY);
+    wnoutrefresh(stdscr);
+
+    clienta1.draw(winClienta, clientaElegida);	
+
+    doupdate();
 }
 
 void gameover()

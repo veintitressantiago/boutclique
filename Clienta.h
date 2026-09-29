@@ -13,7 +13,7 @@ public:
 Clienta(string nombre = "Desconocida", string estilo = "Casual", int presupuesto = 1000, int satisfaccion = 50);
 
 //metodos publicos
-void draw(int opcion);
+void draw(WINDOW* win, int opcion);
 void setup();
 void update();
 bool evaluarPrenda();
