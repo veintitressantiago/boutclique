@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string> 
 
+#include "Prenda.h"
+
 using namespace std;
 
 class Clienta
@@ -16,7 +18,7 @@ Clienta(string nombre = "Desconocida", string estilo = "Casual", int presupuesto
 void draw(WINDOW* win, int opcion);
 void setup();
 void update();
-bool evaluarPrenda();
+bool evaluarPrenda(const Prenda& prendaElegida);
 
 string getNombre() const { return m_nombre; }
 string getEstilo() const { return m_estilo; }

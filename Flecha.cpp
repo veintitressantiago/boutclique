@@ -1,8 +1,8 @@
 #include "Flecha.h"
 void Flechas::setup()
 {
-    m_xIzquierda = 16;
-    m_xDerecha = 42;
+    m_xIzquierda = 10;
+    m_xDerecha = 50;
     m_y = 8;
 }
 void Flechas::draw() const

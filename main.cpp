@@ -12,8 +12,6 @@
 #include "Tienda.h"
 #include "Flecha.h"
 
-
-
 using namespace std;
 
 //------constantes
@@ -40,7 +38,6 @@ bool seleccionandoPrenda = false;
 int categoriaActual = 0;
 int prendaActual = 0;
 
-
 //------funciones globales
 void menu();
 void instrucciones();
@@ -61,6 +58,24 @@ int main()
 	noecho();
 	curs_set(false);
 	keypad(stdscr, true);
+    nodelay(stdscr, TRUE);
+    set_escdelay(25);
+
+    if (has_colors()) 
+    {
+        start_color(); 
+
+        init_pair(1, COLOR_BLACK, COLOR_WHITE);    
+        init_pair(2, COLOR_WHITE, COLOR_BLACK); 
+        init_pair(3, COLOR_RED, COLOR_BLACK);     
+        init_pair(4, COLOR_GREEN, COLOR_BLACK);   
+        init_pair(5, COLOR_YELLOW, COLOR_BLACK);  
+        init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(7, COLOR_CYAN, COLOR_BLACK);
+        init_pair(8, COLOR_BLUE, COLOR_BLACK);
+        
+    }
+
 
 // check terminal 
 	if (LINES < ALTO || COLS < ANCHO)
@@ -77,7 +92,6 @@ int main()
 
     winClienta = newwin(altoWin, anchoWin, posY, posX);
 
-    tienda1.setup();
 
 //BUCLE PRINCIPAL
   while (!salir)
@@ -101,8 +115,6 @@ int main()
     }
 }
 
-delay_output(DELAY); 
-
     if(winClienta) delwin (winClienta);
     endwin();
 	return 0;
@@ -112,7 +124,6 @@ void menu()
 {
 
 erase();
-
 mvprintw( 3, 45,    "BOUT(CL)IQUE");
 mvprintw( 4, 45, "                                  +@@@@:           ");
 mvprintw( 5, 45, "         :@@@@@=                 @@@@@@@:          ");
@@ -139,9 +150,12 @@ mvprintw(25, 45, "       =@@@@-@@@@               :@=      @         ");
 
 mvprintw(27, 58, "MENU");
 mvprintw(29, 54, "1 - JUGAR");
-mvprintw(32, 54, "2 - SALIR");
-
+mvprintw(31, 54, "2 - INSTRUCCIONES");
+mvprintw(33, 54, "3 - CREDITOS");
+mvprintw(35, 54, "4 - SALIR ");
 refresh();
+
+napms(DELAY);
 
 char opcion = getch();
 
@@ -152,13 +166,48 @@ char opcion = getch();
     setup();
     break;
   case '2':
-		salir = true;
+        instrucciones();
+    break;
+  case '3':
+        creditos();
+    break;
+  case '4':
+        mostrar_menu = false;
+        salir = true;
     break;
   default:
     break;
   }
 }
 
+void instrucciones() {
+    char opcion;
+  do
+  {
+    erase();
+    mvprintw(12, 34, "El juego consiste en elegir la prenda correcta ");
+    mvprintw(13, 34, "segun lo que busquen las clientas.");
+    mvprintw(14, 34, "Elegir la categoría de prenda con las flechas del cursor.");
+    mvprintw(15, 34, "Disparar con la tecla 'z'."); // elegir y eso
+    mvprintw(17, 34, "Presione la barra para volver al menú...");
+    opcion = getch();
+  } while (opcion != ' ');
+}
+
+void creditos() {
+    char opcion;
+  do
+  {
+    erase();
+mvprintw(11, 34, "_,.-'~'-.,__,.-'~'-.,__,.-'~'-.,__,.-'~'-.,__,.-'~'");
+mvprintw(12, 34, "       INFORMATICA GENERAL CATEDRA TIRIGALL        " );
+mvprintw(13, 34, " Juan Derene, Valentina Mauro, Santiago Stillitano ");
+mvprintw(14, 34, "_,.-'~'-.,__,.-'~'-.,__,.-'~'-.,__,.-'~'-.,__,.-'~'");
+mvprintw(16, 34, "Presione la barra para volver al menú...");
+opcion = getch();
+  } while (opcion != ' ');
+
+}
 
 void setup()
 {
@@ -299,10 +348,10 @@ void drawCatalogo()
 {
     if (!seleccionandoPrenda)
     {
-        mvprintw(4, 15, "1. Vestidos");
-        mvprintw(4, 45, "2. Zapatos");
-        mvprintw(14, 15, "3. Partes de Abajo");
-        mvprintw(14, 45, "4. Partes de Arriba");
+        mvprintw(4, 10, "1. Vestidos");
+        mvprintw(4, 40, "2. Zapatos");
+        mvprintw(14, 10, "3. Partes de Abajo");
+        mvprintw(14, 40, "4. Partes de Arriba");
     }
     else
     {
@@ -312,15 +361,44 @@ void drawCatalogo()
         // Obtener la prenda actual basándonos en los índices
         const Prenda& prendaMostrada = tienda1.getPrenda(categoriaActual, prendaActual);
 
-        // Dibujar el arte ASCII de la prenda entre las flechas
-        prendaMostrada.draw(6, 26); 
+        int COLOR = 1;
 
+        if (categoriaActual == 0) {
+                if(prendaActual == 0) COLOR = 1;
+                if(prendaActual == 1) COLOR = 3;
+                if(prendaActual == 2) COLOR = 6;
+                if(prendaActual == 3) COLOR = 5;
+            } 
+            else if (categoriaActual == 1) {
+                if(prendaActual == 0) COLOR = 1;
+                if(prendaActual == 1) COLOR = 2;
+                if(prendaActual == 2) COLOR = 4;
+                if(prendaActual == 3) COLOR = 5;
+            }
+            else if(categoriaActual == 2) {
+                if(prendaActual == 0) COLOR = 8;
+                if(prendaActual == 1) COLOR = 8;
+                if(prendaActual == 2) COLOR = 2;
+                if(prendaActual == 3) COLOR = 1;
+            }
+            else if(categoriaActual == 3) {
+                if(prendaActual == 0) COLOR = 2;
+                if(prendaActual == 1) COLOR = 7;
+                if(prendaActual == 2) COLOR = 6;
+                if(prendaActual == 3) COLOR = 4;
+            }
+
+        // Dibujar el arte ASCII de la prenda entre las flechas
+       attron(COLOR_PAIR(COLOR));
+        prendaMostrada.draw(6, 20); 
+        attroff(COLOR_PAIR(COLOR));
+        
         // Panel de detalles de la prenda
-        mvprintw(12, 16, "Prenda: %s", prendaMostrada.getNombre().c_str());
-        mvprintw(13, 16, "Estilo: %s", prendaMostrada.getEstilo().c_str());
-        mvprintw(14, 16, "Precio: $%d", prendaMostrada.getPrecio());
-        mvprintw(16, 16, "[ENTER] Seleccionar");
-        mvprintw(17, 16, "[ESC]   Volver");
+        mvprintw(23, 16, "Prenda: %s", prendaMostrada.getNombre().c_str());
+        mvprintw(24, 16, "Estilo: %s", prendaMostrada.getEstilo().c_str());
+        mvprintw(25, 16, "Precio: $%d", prendaMostrada.getPrecio());
+        mvprintw(26, 16, "[ENTER] Seleccionar");
+        mvprintw(27, 16, "[ESC]   Volver");
     }
 } 
 
@@ -330,6 +408,7 @@ void draw()
     box(stdscr, 0, 0);
 
     mvprintw(0, 80, "[ EXITO: %d    ]", puntaje);
+    for(int i = 0; i < puntaje; i++) { mvaddch(0, 91 + i, ACS_CKBOARD);}
     mvprintw(0, 100, "[ DINERO:$ %d    ]", tienda1.getDinero());
 
     clienta1.draw(winClienta, clientaElegida);	
@@ -346,8 +425,11 @@ void draw()
 
 void gameover()
 {
+
+
 	for (int y = 10; y < 16; y++) mvhline(y, 40, ' ', 40);
 
+    //esto lo podemos hacer un win y box????
 	mvaddch(9, 39, ACS_ULCORNER);
 	mvaddch(9, 80, ACS_URCORNER);
 	mvaddch(16, 39, ACS_LLCORNER);
@@ -360,16 +442,21 @@ void gameover()
 	mvvline(10, 80, ACS_VLINE, 6);
 
 	mvprintw(12, 55, "GAME OVER");
-	mvprintw(13, 50, "VOLVER A JUGAR? (S/N)");
+	mvprintw(13, 50, "1- RESTART");
+    mvprintw(14, 50, "2- VOLVER AL MENU");
+
 
 	int opcion = getch();
 
-	if (opcion == 's' || opcion == 'S')
+	if (opcion == '1')
 	{
 		setup();
 	}
-	else if (opcion == 'n' || opcion == 'N')
+	else if (opcion == '2')
 	{
-		salir = true;
+		mostrar_menu = true;
+        game_over = false; 
 	}
 }
+
+
