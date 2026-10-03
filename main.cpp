@@ -26,11 +26,7 @@ WINDOW *winClienta = 0;
 
 Tienda tienda1;
 Cursor cursor1;
-Clienta clienta1;
-Clienta clienta2;
-Clienta clienta3;
-Clienta clienta4;
-Clienta clienta5;
+vector<Clienta> clientas;
 Flechas flechas1;
 SentidoFlecha flechaActual = SentidoFlecha::IZQUIERDA;
 
@@ -120,35 +116,94 @@ void menu()
 {
 
     erase();
-    mvprintw(3, 45, "BOUT(CL)IQUE");
-    mvprintw(4, 45, "                                  +@@@@:           ");
-    mvprintw(5, 45, "         :@@@@@=                 @@@@@@@:          ");
-    mvprintw(6, 45, "        @@@@@@@@@                @@@@@@@:          ");
-    mvprintw(7, 45, "        @@@@@@@@@@                -@@@@@.          ");
-    mvprintw(8, 45, "        @@@@@@@@@@              -@@@@@             ");
-    mvprintw(9, 45, "         +@@@@@@@@              @@@@@@@@.          ");
-    mvprintw(10, 45, "            @@@@@@              @@@@@@@@:          ");
-    mvprintw(11, 45, "        -@@@@@@@@@*             @@@@@@@@           ");
-    mvprintw(12, 45, "        @@@@@@@@@@*             @@@@@@@@           ");
-    mvprintw(13, 45, "       :@@@@@@@@@@              @@@@@@@@.          ");
-    mvprintw(14, 45, "       :@@@@@@@@@@              @ @@@@@@@          ");
-    mvprintw(15, 45, "       @@@@@@@= @@             @ =@@@@@@@@         ");
-    mvprintw(16, 45, "       @@@@@@@@@@-             @ @@@@@@@@@         ");
-    mvprintw(17, 45, "      @@@@@@@@@               #@#=@@@@@@@@@        ");
-    mvprintw(18, 45, "      @@@@@@@@@@               @  *@@@@@@@#        ");
-    mvprintw(19, 45, "      @@@@@@@@@@@*                  @@@@@@         ");
-    mvprintw(20, 45, "     #@@@@@@@@@@@@-                 .@@@@@         ");
-    mvprintw(21, 45, "      @@@@@@@@@@@@@                .@@*#@@         ");
-    mvprintw(22, 45, "       @@@@@@@@@@@@                @@: #@@         ");
-    mvprintw(23, 45, "       @@@@@@@@@@@@=              @@    @@         ");
-    mvprintw(24, 45, "       @@@@@@@@@@@@=              @:    @@         ");
-    mvprintw(25, 45, "       =@@@@-@@@@               :@=      @         ");
+    mvprintw(3, 8, " ,ggggggggggg,                                                                                      ");
+    mvprintw(4, 8, "dP---88------Y8,                            ss                                                      ");
+    mvprintw(5, 8, "Yb,  88      `8b                            I8                                                      ");
+    mvprintw(6, 8, " -  88      ,8P                         88888888                      jd                                   ");
+    mvprintw(7, 8, "     88aaaad8P-                             I8                        --                                   ");
+    mvprintw(8, 8, "     88----Y8ba    ,ggggg,    jd      vm    I8                        gg     ,gggg,gg  vm      ss   ,ggg,  ");
+    mvprintw(9, 8, "     88      `8b  dP-  -Y8ggg I8      8I    I8                        88    dP-  -Y8I  I8      8I  i8- -8i ");
+    mvprintw(10, 8, "     88      ,8P i8'    ,8I   I8,    ,8I   ,I8,                       88   i8'    ,8I  I8,    ,8I  I8, ,8I ");
+    mvprintw(11, 8, "     88_____,d8',d8,   ,d8'  ,d8b,  ,d8b, ,d88b,                    _,88,_,d8,   ,d8b ,d8b,  ,d8b, `YbadP' ");
+    mvprintw(12, 8, "    88888888P-  P-Y8888P-    8P--Y88P--Y888P--Y88                   8P--Y8P-Y8888P-88d8P--Y88P--Y8888P-Y888-");
+    mvprintw(13, 8, "                                                                                   I8P                     ");
+    mvprintw(14, 8, "                                                                                   I8'                     ");
+    mvprintw(15, 8, "                                                                                   I8                      ");
+    mvprintw(16, 8, "                                                                                   I8                      ");
+    mvprintw(17, 8, "                                                                                   I8                      ");
+    mvprintw(18, 8, "                                                                                   I8                      ");
+    mvprintw(7, 57, "  .-._   .-._..-.  ");
+    mvprintw(8, 57, "..' (_)`-'    / (_)");
+    mvprintw(9, 57, "|           /      ");
+    mvprintw(10, 57, "|    _     /       ");
+    mvprintw(11, 57, "`.    ) .-/.    .-.");
+    mvprintw(12, 57, "  `--' (_/ `-._.   ");
+    mvprintw(14, 95, "         :@@@@@=");
+    mvprintw(15, 95, "        @@@@@@@@@");
+    mvprintw(16, 95, "        @@@@@@@@@@");
+    mvprintw(17, 95, "        @@@@@@@@@@");
+    mvprintw(18, 95, "         +@@@@@@@@");
+    mvprintw(19, 95, "            @@@@@@");
+    mvprintw(20, 95, "        -@@@@@@@@@*");
+    mvprintw(21, 95, "        @@@@@@@@@@*");
+    mvprintw(22, 95, "       :@@@@@@@@@@");
+    mvprintw(23, 95, "       :@@@@@@@@@@");
+    mvprintw(24, 95, "       @@@@@@@= @@");
+    mvprintw(25, 95, "       @@@@@@@@@@-");
+    mvprintw(26, 95, "      @@@@@@@@@");
+    mvprintw(27, 95, "      @@@@@@@@@@");
+    mvprintw(28, 95, "      @@@@@@@@@@@*");
+    mvprintw(29, 95, "     #@@@@@@@@@@@@-");
+    mvprintw(30, 95, "      @@@@@@@@@@@@@");
+    mvprintw(31, 95, "       @@@@@@@@@@@@");
+    mvprintw(32, 95, "       @@@@@@@@@@@@=");
+    mvprintw(33, 95, "       @@@@@@@@@@@@=");
+    mvprintw(34, 95, "       =@@@@-@@@@");
+    mvprintw(8, 1, "   +@@@@:");
+    mvprintw(9, 1, "  @@@@@@@:");
+    mvprintw(10, 1, "  @@@@@@@:");
+    mvprintw(11, 1, "   -@@@@@.");
+    mvprintw(12, 1, "  -@@@@@");
+    mvprintw(13, 1, "  @@@@@@@@.");
+    mvprintw(14, 1, "  @@@@@@@@:");
+    mvprintw(15, 1, "  @@@@@@@@");
+    mvprintw(16, 1, "  @@@@@@@@");
+    mvprintw(17, 1, "  @@@@@@@@.");
+    mvprintw(18, 1, "  @ @@@@@@@");
+    mvprintw(19, 1, " @ =@@@@@@@@");
+    mvprintw(20, 1, " @ @@@@@@@@@");
+    mvprintw(21, 1, "#@#=@@@@@@@@@");
+    mvprintw(22, 1, " @  *@@@@@@@#");
+    mvprintw(23, 1, "      @@@@@@");
+    mvprintw(24, 1, "      .@@@@@");
+    mvprintw(25, 1, "     .@@*#@@");
+    mvprintw(26, 1, "     @@: #@@");
+    mvprintw(27, 1, "    @@    @@");
+    mvprintw(28, 1, "    @:    @@");
+    mvprintw(29, 1, "  :@=      @");
+    mvprintw(16, 50, "   -.   ");
+    mvprintw(17, 50, "   /    ");
+    mvprintw(18, 50, "  /      Jugar");
+    mvprintw(19, 50, "-----   ");
+    mvprintw(20, 50, "        ");
+    mvprintw(21, 50, "        ");
+    mvprintw(22, 50, " .-.    ");
+    mvprintw(23, 50, "    )   ");
+    mvprintw(24, 50, " .-/.    Instrucciones");
+    mvprintw(25, 50, "(_/  `-'");
+    mvprintw(26, 50, "        ");
+    mvprintw(27, 50, "        ");
+    mvprintw(28, 50, " .--.   ");
+    mvprintw(29, 50, "    .'  ");
+    mvprintw(30, 50, "   '.    Creditos");
+    mvprintw(31, 50, "'----'  ");
+    mvprintw(32, 50, "        ");
+    mvprintw(33, 50, "        ");
+    mvprintw(34, 50, " /  / ");
+    mvprintw(35, 50, "/__/  ");
+    mvprintw(36, 50, "  /      Salir");
+    mvprintw(37, 50, " /    ");
 
-    mvprintw(27, 58, "MENU");
-    mvprintw(29, 54, "1 - JUGAR");
-    mvprintw(31, 54, "2 - INSTRUCCIONES");
-    mvprintw(33, 54, "3 - CREDITOS");
-    mvprintw(35, 54, "4 - SALIR ");
     refresh();
 
     napms(DELAY);
@@ -185,7 +240,7 @@ void instrucciones()
         mvprintw(12, 34, "El juego consiste en elegir la prenda correcta ");
         mvprintw(13, 34, "segun lo que busquen las clientas.");
         mvprintw(14, 34, "Elegir la categoría de prenda con las flechas del cursor.");
-        mvprintw(15, 34, "Disparar con la tecla 'z'."); // elegir y eso
+        mvprintw(15, 34, "Disparar con la tecla 'z'.");
         mvprintw(17, 34, "Presione la barra para volver al menú...");
         opcion = getch();
     } while (opcion != ' ');
@@ -212,6 +267,17 @@ void setup()
     puntaje = 0;
 
     tienda1.setup();
+    clientas = {
+        // remera manga corta
+        Clienta("Ana", "Casual", 500, 50),
+        // vestido elegante
+        Clienta("Maria", "Elegante", 1000, 50),
+        // tacos muy altos
+        Clienta("Sofia", "Elegante", 1200, 50),
+        // camisa manga larga
+        Clienta("Laura", "Elegante", 900, 50),
+        // pollera corta y simple
+        Clienta("Julia", "Casual", 700, 50)};
 
     seleccionandoPrenda = false;
     categoriaActual = 0;
@@ -231,7 +297,7 @@ void input()
     {
         if (seleccionandoPrenda)
         {
-            // Volver a las cuatro categorias
+
             seleccionandoPrenda = false;
 
             cursor1.setX(
@@ -315,12 +381,12 @@ void input()
     case KEY_ENTER:
     case '\n':
     {
-
         const Prenda &prenda = tienda1.getPrenda(categoriaActual, prendaActual);
 
-        if (clienta1.evaluarPrenda(prenda))
+        if (clientas[clientaElegida].evaluarPrenda(prenda))
         {
             puntaje++;
+            tienda1.sumarDinero(prenda.getPrecio());
         }
         else
         {
@@ -423,21 +489,26 @@ void draw()
     erase();
     box(stdscr, 0, 0);
 
-    mvprintw(0, 80, "[ EXITO: %d    ]", puntaje);
-    for (int i = 0; i < puntaje; i++)
-    {
-        mvaddch(0, 91 + i, ACS_CKBOARD);
-    }
-    mvprintw(0, 100, "[ DINERO:$ %d    ]", tienda1.getDinero());
+    mvprintw(0, 10, "[ EXITO: %d]", puntaje);
+    mvprintw(0, 40, "[ DINERO: $%d]", tienda1.getDinero());
 
-    clienta1.draw(winClienta, clientaElegida);
+    clientas[clientaElegida].draw(winClienta, clientaElegida);
 
     drawCatalogo();
-    cursor1.draw();
+    if (!seleccionandoPrenda)
+    {
+        cursor1.draw();
+    }
 
     wnoutrefresh(stdscr);
 
-    clienta1.draw(winClienta, clientaElegida);
+    clientas[clientaElegida].draw(winClienta, clientaElegida);
+
+    doupdate();
+
+    wnoutrefresh(stdscr);
+
+    clientas[clientaElegida].draw(winClienta, clientaElegida);
 
     doupdate();
 }
@@ -453,10 +524,8 @@ void gameover()
     mvaddch(9, 80, ACS_URCORNER);
     mvaddch(16, 39, ACS_LLCORNER);
     mvaddch(16, 80, ACS_LRCORNER);
-    // Los marcos horizontales.
     mvhline(9, 40, ACS_HLINE, 40);
     mvhline(16, 40, ACS_HLINE, 40);
-    // Los marcos verticales.
     mvvline(10, 39, ACS_VLINE, 6);
     mvvline(10, 80, ACS_VLINE, 6);
 

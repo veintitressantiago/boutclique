@@ -31,7 +31,7 @@ void Clienta::draw(WINDOW *win, int opcion)
     {
     case 0:
         wattron(win, COLOR_PAIR(2));
-        mvwaddstr(win, 5, 2, "Hola! estoy buscando una remera manga corta.");
+        mvwaddstr(win, 5, 6, "Hola! estoy buscando una remera manga corta.");
         mvwaddstr(win, 7, 4, "          .:=+##########*=-:              ");
         mvwaddstr(win, 8, 4, "        .=##################+:            ");
         mvwaddstr(win, 9, 4, "       :+#####################+:          ");
@@ -60,7 +60,7 @@ void Clienta::draw(WINDOW *win, int opcion)
 
     case 1:
         wattron(win, COLOR_PAIR(2));
-        mvwaddstr(win, 5, 2, "Hola! Busco un vestido elegante .");
+        mvwaddstr(win, 5, 9, "Hola! Busco un vestido elegante .");
         mvwaddstr(win, 7, 4, "           .:#'---------------'+:         ");
         mvwaddstr(win, 8, 4, "         .:*@@@@@@@@@@@@@@@@@@%+.         ");
         mvwaddstr(win, 9, 4, "         :%@@@@@@@@@@@@@@@@@@@@@#=.       ");
@@ -89,7 +89,7 @@ void Clienta::draw(WINDOW *win, int opcion)
 
     case 2:
         wattron(win, COLOR_PAIR(2));
-        mvwaddstr(win, 5, 2, "Que tal? necesito unos tacos muy altos.");
+        mvwaddstr(win, 5, 8, "Que tal? necesito unos tacos muy altos.");
         mvwaddstr(win, 7, 4, "       MMMMMM@@@@@@@@@@@@             ");
         mvwaddstr(win, 8, 4, "       MMMMM@@@@@@@@@@@@@@@@          ");
         mvwaddstr(win, 9, 4, "          {@@@@@@@@@@@@@@@@@@@        ");
@@ -117,7 +117,7 @@ void Clienta::draw(WINDOW *win, int opcion)
 
     case 3:
         wattron(win, COLOR_PAIR(2));
-        mvwaddstr(win, 5, 2, "Como va? busco una camisa manga larga.");
+        mvwaddstr(win, 5, 8, "Como va? busco una camisa manga larga.");
         mvwaddstr(win, 7, 4, "            +..000000-##                ");
         mvwaddstr(win, 8, 4, "         ++#######000000.##             ");
         mvwaddstr(win, 9, 4, "        ################000-            ");
@@ -145,7 +145,8 @@ void Clienta::draw(WINDOW *win, int opcion)
 
     case 4:
         wattron(win, COLOR_PAIR(2));
-        mvwaddstr(win, 5, 2, "Buenas! estoy en busqueda de una pollera corta y simple.");
+        mvwaddstr(win, 5, 4, "Buenas! estoy en busqueda de una pollera corta");
+        mvwaddstr(win, 6, 22, "y simple.");
         mvwaddstr(win, 7, 4, "          .##############            ");
         mvwaddstr(win, 8, 4, "         *#################          ");
         mvwaddstr(win, 9, 4, "       ?####################         ");
