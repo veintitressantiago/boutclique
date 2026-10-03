@@ -16,7 +16,7 @@ enum class CategoriaPrenda
 class Prenda
 {
 public:
-    Prenda(string nombre,string estilo,string color, int precio, CategoriaPrenda categoria,vector<string> ascii);
+    Prenda(string nombre, string estilo, string color, int precio, CategoriaPrenda categoria, vector<string> ascii);
 
     void draw(int y, int x) const;
 
@@ -25,8 +25,8 @@ public:
     string getColor() const { return m_color; }
     int getPrecio() const { return m_precio; }
     CategoriaPrenda getCategoria() const { return m_categoria; }
-    const vector<string>& getAscii() const { return m_ascii; }
-    
+    const vector<string> &getAscii() const { return m_ascii; }
+
     int getAlto() const;
     int getAncho() const;
 

@@ -10,19 +10,18 @@ using namespace std;
 class Tienda
 {
 private:
-//-----atributos privados
-vector<vector<Prenda>> m_catalogo; //  matriz de prendas
-int m_dinero;
+    vector<vector<Prenda>> m_catalogo;
+    int m_dinero;
 
 public:
-Tienda();
+    Tienda();
 
-void setup(); //inicializa la matriz
+    void setup();
 
-const Prenda& getPrenda(int categoria, int indice) const;
+    const Prenda &getPrenda(int categoria, int indice) const;
 
-void mostrarPrendaActual(int y, int x, int categoria, int indice);
+    void mostrarPrendaActual(int y, int x, int categoria, int indice);
 
-int getDinero() const { return m_dinero; }
-void sumarDinero(int monto) { m_dinero += monto; }
+    int getDinero() const { return m_dinero; }
+    void sumarDinero(int monto) { m_dinero += monto; }
 };

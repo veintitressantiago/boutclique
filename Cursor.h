@@ -5,15 +5,15 @@
 class Cursor
 {
 public:
-void setup();
-void draw();
+    void setup();
+    void draw();
 
-void setX(int x);
-void setY(int y);
+    void setX(int x);
+    void setY(int y);
 
-int getX();
-int getY();
+    int getX();
+    int getY();
 
 private:
-int m_x, m_y;
+    int m_x, m_y;
 };

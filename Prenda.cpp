@@ -20,7 +20,8 @@ int Prenda::getAlto() const
 int Prenda::getAncho() const
 {
     size_t maximo = 0;
-    for (const auto& linea : m_ascii)
-        if (linea.size() > maximo) maximo = linea.size();
+    for (const auto &linea : m_ascii)
+        if (linea.size() > maximo)
+            maximo = linea.size();
     return (int)maximo;
 }

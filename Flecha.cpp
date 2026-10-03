@@ -7,7 +7,6 @@ void Flechas::setup()
 }
 void Flechas::draw() const
 {
-    // Esta funcion solamente dibuja las flechas ASCII.
     mvaddch(m_y, m_xIzquierda, '<');
     mvaddch(m_y, m_xDerecha, '>');
 }
@@ -21,4 +20,3 @@ int Flechas::getY() const
 {
     return m_y;
 }
-
