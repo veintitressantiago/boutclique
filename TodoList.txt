@@ -9,6 +9,7 @@ Juan:
 Arregle el constructor de "Clienta.h" implementando "evaluarPrenda" y sacando el valor "1000" que tenia, que era de referencia.
 Modifique input para el carrousel de seleccion, iterando el indice de la ropa.
 Saque el cursor del Carrusel
+La clase Clienta ahora se aplica como un vector con 5 instancias en el main.
 
 TODO:
 Generar no-repitencia de Clientas.
