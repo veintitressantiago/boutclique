@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ncurses.h>
+#include <clocale>  
 #include <curses.h>
 #include <cstdlib>
 #include <ctime>
@@ -21,6 +22,8 @@ const int DELAY = 30;
 bool salir = false;
 bool mostrar_menu = true;
 bool game_over = false;
+bool win = false;
+bool salida = false;
 int puntaje = 0;
 WINDOW *winClienta = 0;
 
@@ -44,10 +47,13 @@ void update();
 void draw();
 void drawCatalogo();
 void gameover();
+void pantallaWin();
 
 int main()
 {
     srand(time(0));
+
+    setlocale(LC_ALL, "");
 
     initscr();
     noecho();
@@ -90,6 +96,11 @@ int main()
         {
             nodelay(stdscr, false);
             menu();
+        }
+        else if (win)
+        {
+            nodelay(stdscr, false);
+            pantallaWin();
         }
         else if (!game_over)
         {
@@ -240,7 +251,7 @@ void instrucciones()
         mvprintw(12, 34, "El juego consiste en elegir la prenda correcta ");
         mvprintw(13, 34, "segun lo que busquen las clientas.");
         mvprintw(14, 34, "Elegir la categoría de prenda con las flechas del cursor.");
-        mvprintw(15, 34, "Disparar con la tecla 'z'.");
+        mvprintw(15, 34, "Seleccionar con ENTER.");
         mvprintw(17, 34, "Presione la barra para volver al menú...");
         opcion = getch();
     } while (opcion != ' ');
@@ -264,6 +275,7 @@ void creditos()
 void setup()
 {
     game_over = false;
+    win = false;
     puntaje = 0;
 
     tienda1.setup();
@@ -387,16 +399,24 @@ void input()
         {
             puntaje++;
             tienda1.sumarDinero(prenda.getPrecio());
+
+            if(puntaje >= 5)
+            {
+                win = true;
+            } else 
+            {
+            seleccionandoPrenda = false;
+            clientaElegida = rand() % 5;
+
+            cursor1.setX((categoriaActual % 2 == 0) ? 15 : 45);
+            cursor1.setY((categoriaActual < 2) ? 5 : 15);
+            }
         }
         else
         {
+            game_over = true;
         }
 
-        seleccionandoPrenda = false;
-        clientaElegida = rand() % 5;
-
-        cursor1.setX((categoriaActual % 2 == 0) ? 15 : 45);
-        cursor1.setY((categoriaActual < 2) ? 5 : 15);
         break;
     }
 
@@ -407,6 +427,7 @@ void input()
 
 void update()
 {
+
 }
 
 void drawCatalogo()
@@ -425,56 +446,19 @@ void drawCatalogo()
 
         const Prenda &prendaMostrada = tienda1.getPrenda(categoriaActual, prendaActual);
 
-        int COLOR = 1;
+        int colores [4][4]= 
+        {
+            {1,3,6,5},
+            {1,2,4,5},
+            {8,8,2,1},
+            {2,7,6,4}
+        };
 
-        if (categoriaActual == 0)
-        {
-            if (prendaActual == 0)
-                COLOR = 1;
-            if (prendaActual == 1)
-                COLOR = 3;
-            if (prendaActual == 2)
-                COLOR = 6;
-            if (prendaActual == 3)
-                COLOR = 5;
-        }
-        else if (categoriaActual == 1)
-        {
-            if (prendaActual == 0)
-                COLOR = 1;
-            if (prendaActual == 1)
-                COLOR = 2;
-            if (prendaActual == 2)
-                COLOR = 4;
-            if (prendaActual == 3)
-                COLOR = 5;
-        }
-        else if (categoriaActual == 2)
-        {
-            if (prendaActual == 0)
-                COLOR = 8;
-            if (prendaActual == 1)
-                COLOR = 8;
-            if (prendaActual == 2)
-                COLOR = 2;
-            if (prendaActual == 3)
-                COLOR = 1;
-        }
-        else if (categoriaActual == 3)
-        {
-            if (prendaActual == 0)
-                COLOR = 2;
-            if (prendaActual == 1)
-                COLOR = 7;
-            if (prendaActual == 2)
-                COLOR = 6;
-            if (prendaActual == 3)
-                COLOR = 4;
-        }
+        int color = colores[categoriaActual][prendaActual];
 
-        attron(COLOR_PAIR(COLOR));
+        attron(COLOR_PAIR(color));
         prendaMostrada.draw(6, 20);
-        attroff(COLOR_PAIR(COLOR));
+        attroff(COLOR_PAIR(color));
 
         mvprintw(23, 16, "Prenda: %s", prendaMostrada.getNombre().c_str());
         mvprintw(24, 16, "Estilo: %s", prendaMostrada.getEstilo().c_str());
@@ -513,25 +497,44 @@ void draw()
     doupdate();
 }
 
+
+
 void gameover()
 {
 
-    for (int y = 10; y < 16; y++)
-        mvhline(y, 40, ' ', 40);
+    if(winClienta){
+        delwin(winClienta);
+    }
 
-    // esto lo podemos hacer un win y box????
+    erase();
+    box(stdscr, 0, 0);
+    
+
+    for (int y = 10; y < 17; y++)
+        mvhline(y, 35, ' ', 50);
+
     mvaddch(9, 39, ACS_ULCORNER);
     mvaddch(9, 80, ACS_URCORNER);
     mvaddch(16, 39, ACS_LLCORNER);
     mvaddch(16, 80, ACS_LRCORNER);
+    
     mvhline(9, 40, ACS_HLINE, 40);
     mvhline(16, 40, ACS_HLINE, 40);
     mvvline(10, 39, ACS_VLINE, 6);
     mvvline(10, 80, ACS_VLINE, 6);
 
-    mvprintw(12, 55, "GAME OVER");
+    if(salida)
+    {
+    mvprintw(12, 50, "ESTAS SALIENDO DE LA PARTIDA....");
+    mvprintw(13, 50, "1- RESTART");
+    mvprintw(14, 50, "2- VOLVER AL MENU");   
+    } else {
+    mvprintw(11, 55, "GAME OVER");
+    mvprintw(12, 42, "Esto no es lo que la clienta pidio...");
     mvprintw(13, 50, "1- RESTART");
     mvprintw(14, 50, "2- VOLVER AL MENU");
+    }
+    refresh();
 
     int opcion = getch();
 
@@ -545,3 +548,113 @@ void gameover()
         game_over = false;
     }
 }
+
+void pantallaWin()
+{
+    erase();
+
+    if (winClienta){
+        delwin(winClienta);
+    }
+
+    vector<string> probador = {
+" !!!!##################################################33##############################3333####33######!!33====",
+" !!==##################################################!!############################################33##33!!==",
+"     ##################################################==############################################33##!!    ",
+"     ##################################################  ############################################33####    ",
+"   ==############################################33####  ################################################!!    ",
+"   ==##################################################  ################################################!!    ",
+"   ==##################################################  ################################################      ",
+"   ==################################################!!  ####33##########################################==    ",
+"     ############################################33==    ####33##########################################==    ",
+"     ############################################33      ####33##########################################!!    ",
+"     ############################################33      ####33##########################################!!    ",
+"     ##########################################33!!      ####3333####################################33##!!    ",
+"     ##########################################33==      ####3333####################################33##!!    ",
+"     ##########################################33        ####33######################################33##!!    ",
+"     ########################################3333        ####33######################################33##33    ",
+"     ########################################33!!        ####33######################################33##!!    ",
+"     ########################################33==        ####3333####################################33##!!    ",
+"     ##############################33######33!!          ####3333####################################33##!!    ",
+"     ##############################33######33!!          ####33##########################################!!    ",
+"     ######################################33==          ####33##########################################!!    ",
+"     ######################################33            ####33##########################################!!    ",
+"     ######################################!!            ##3333######################33##############33##!!    ",
+"     ####################################33!!            ##3333######################33##############33##!!    ",
+"     ############################33######33==            ##3333######################################33##!!    ",
+"     ####################################!!              ##33################################33######33##!!    ",
+"     ##################################33!!              ##33################################33######33##!!    ",
+"     ##################################33==              ##33################################33######33##!!    ",
+"     ##################################!!                ##33########################################33##!!    ",
+"     ################################33==                ##33########################################33##!!    ",
+"     ################################33                  ##33########################################33##!!    ",
+"     ##############################33==                  ##33########################################33##!!    ",
+"     ##############################33                    ##33########################################33##!!    ",
+"     ############################33==                    ##33########################################33##!!    ",
+"     ############################33                      ##33########################################33##!!    ",
+"     33########################33                        ##33############################################!!    ",
+"     33########################33                        ##33############################################!!    ",
+"     33########################==                        ##33############################################!!    ",
+"     33######################33                          ##33########################################33##!!    "                                                                                                                                                                                                                                                                     
+    };
+
+    box(stdscr,0,0);
+    for (size_t i = 0; i < probador.size(); i++)
+    {
+        attron(COLOR_PAIR(3));
+        mvaddstr(i + 1, 2, probador[i].c_str());
+        attroff(COLOR_PAIR(3));
+    }
+
+        for (int y = 10; y < 16; y++)
+        mvhline(y, 36, ' ', 49);
+
+    mvaddch(9, 35, ACS_ULCORNER);
+    mvaddch(9, 85, ACS_URCORNER);
+    mvaddch(16, 35, ACS_LLCORNER);
+    mvaddch(16, 85, ACS_LRCORNER);
+
+    mvhline(9, 36, ACS_HLINE, 40);
+    mvhline(16, 36, ACS_HLINE, 40);
+    mvvline(10, 35, ACS_VLINE, 6);
+    mvvline(10, 85, ACS_VLINE, 6);
+
+    mvprintw(12, 38, "Ya no hay clientes, podes tomar un descanso...");
+    mvprintw(14, 43, "Presione la barra para continuar...");
+    refresh();
+
+    nodelay(stdscr, false);
+
+    int opcion = 0;
+    while (opcion != ' '){
+        opcion = getch();
+    }
+
+
+    erase();
+    box(stdscr, 0, 0);
+            for (int y = 10; y < 16; y++)
+        mvhline(y, 40, ' ', 40);
+
+    mvaddch(9, 39, ACS_ULCORNER);
+    mvaddch(9, 80, ACS_URCORNER);
+    mvaddch(16, 39, ACS_LLCORNER);
+    mvaddch(16, 80, ACS_LRCORNER);
+    mvhline(9, 40, ACS_HLINE, 40);
+    mvhline(16, 40, ACS_HLINE, 40);
+    mvvline(10, 39, ACS_VLINE, 6);
+    mvvline(10, 80, ACS_VLINE, 6);
+
+    mvprintw(12, 55, "GANASTE!");
+    mvprintw(14, 40, "Presione la barra para volver al menu...");
+    refresh();
+
+    int espacio = 0;       
+    while (espacio != ' ') {
+        espacio = getch(); 
+    }
+
+    mostrar_menu = true;
+    win = false;
+    }                    
+
