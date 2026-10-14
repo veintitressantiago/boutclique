@@ -34,6 +34,8 @@ Flechas flechas1;
 SentidoFlecha flechaActual = SentidoFlecha::IZQUIERDA;
 
 int clientaElegida;
+vector<int> ordenClientas{0,1,2,3,4};
+int indiceClientaElegida = 0;
 bool seleccionandoPrenda = false;
 int categoriaActual = 0;
 int prendaActual = 0;
@@ -298,7 +300,16 @@ void setup()
 
     cursor1.setup();
     flechas1.setup();
-    clientaElegida = rand() % 5;
+
+    for(int i = 0; i < 5; i++)
+    {
+        int r = rand() % 5;
+        swap(ordenClientas[i], ordenClientas[r]);
+    }
+
+    indiceClientaElegida = 0;
+    clientaElegida = ordenClientas[indiceClientaElegida];
+
 }
 
 void input()
@@ -406,7 +417,8 @@ void input()
             } else 
             {
             seleccionandoPrenda = false;
-            clientaElegida = rand() % 5;
+            indiceClientaElegida++;
+            clientaElegida = ordenClientas[indiceClientaElegida];
 
             cursor1.setX((categoriaActual % 2 == 0) ? 15 : 45);
             cursor1.setY((categoriaActual < 2) ? 5 : 15);
@@ -427,7 +439,6 @@ void input()
 
 void update()
 {
-
 }
 
 void drawCatalogo()
@@ -636,14 +647,14 @@ void pantallaWin()
             for (int y = 10; y < 16; y++)
         mvhline(y, 40, ' ', 40);
 
-    mvaddch(9, 39, ACS_ULCORNER);
-    mvaddch(9, 80, ACS_URCORNER);
-    mvaddch(16, 39, ACS_LLCORNER);
-    mvaddch(16, 80, ACS_LRCORNER);
+    mvaddch(9, 38, ACS_ULCORNER);
+    mvaddch(9, 81, ACS_URCORNER);
+    mvaddch(16, 38, ACS_LLCORNER);
+    mvaddch(16, 81, ACS_LRCORNER);
     mvhline(9, 40, ACS_HLINE, 40);
     mvhline(16, 40, ACS_HLINE, 40);
-    mvvline(10, 39, ACS_VLINE, 6);
-    mvvline(10, 80, ACS_VLINE, 6);
+    mvvline(10, 38, ACS_VLINE, 6);
+    mvvline(10, 81, ACS_VLINE, 6);
 
     mvprintw(12, 55, "GANASTE!");
     mvprintw(14, 40, "Presione la barra para volver al menu...");
