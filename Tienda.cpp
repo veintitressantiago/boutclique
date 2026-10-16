@@ -8,6 +8,7 @@ Tienda::Tienda()
 
 void Tienda::setup()
 {
+        m_dinero = 0;
 
         using C = CategoriaPrenda;
 

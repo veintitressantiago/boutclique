@@ -1,23 +1,20 @@
 #pragma once
-
 #include <ncurses.h>
 #include <iostream>
 #include <string>
-
 #include "Prenda.h"
 
 using namespace std;
 
 class Clienta
 {
-
 public:
     Clienta(string nombre = "Desconocida", string estilo = "Casual", int presupuesto = 1000, int satisfaccion = 50);
 
     void draw(WINDOW *win, int opcion);
     void setup();
     void update();
-    bool evaluarPrenda(const Prenda &prendaElegida);
+    bool evaluarPrenda(const Prenda &prendaElegida, int categoria, int prendaCat);
 
     string getNombre() const { return m_nombre; }
     string getEstilo() const { return m_estilo; }

@@ -13,15 +13,22 @@ Arregle el constructor de "Clienta.h" implementando "evaluarPrenda" y sacando el
 Modifique input para el carrousel de seleccion, iterando el indice de la ropa.
 Saque el cursor del Carrusel
 La clase Clienta ahora se aplica como un vector con 5 instancias en el main.
+Saque el setlocale pero saque las comas que se marcaban, probalo por las dudis en tu compu tambien jeje
+Pasaba lo de "Segmentation fault (core dumped)" porque en el main no se estaba cerrando y 
+volviendo a crear la ventana winClienta cuando entraba en la instancia de gameover o pantallaWin
+En el if ya existente de winClienta agregue "nullptr" que signfica null pointer para que el programa identifique que el puntero 
+es nulo (eso ya arregla el error de memoria) y un if nuevo en setup que checkea si existe winClienta y lo genera en el caso de su 
+ausencia.
+Agregue int categoria e int prendaCat en clase Clienta y en su cpp un if anidado en evaluar prenda para especificar
+dinero, estilo y categoria. En main, dentro de input agregue categoriaActual y prendaActual al if.
+Agregue m_dinero = 0 adentro del setup de Tienda para que se reinicie el dinero.
 
 TODO:
-Generar no-repitencia de Clientas.
-Generar un final del juego.
-(Propuesta) Hacer mas colores.
-//REENTREGA
->   evaluar categoria
-> revisar propuesta gameart 
+Que el negocio gane más vendiendo lo caro aunque no sea lo pedido, o que el cliente 
+con poco presupuesto nunca pueda llevarse lo que quiere.
 FIXME:
+Algunos caracteres se rompen en la ventana de las clientas, persisten caracteres del menu por ejemplo
+
 
 
 

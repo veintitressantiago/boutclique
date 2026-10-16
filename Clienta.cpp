@@ -10,12 +10,39 @@ Clienta::Clienta(string nombre, string estilo, int presupuesto, int satisfaccion
     m_satisfaccion = satisfaccion;
 }
 
-bool Clienta::evaluarPrenda(const Prenda &prendaElegida)
+bool Clienta::evaluarPrenda(const Prenda &prendaElegida, int categoria, int prendaCat)
 {
-    if (prendaElegida.getEstilo() == m_estilo && prendaElegida.getPrecio() <= m_presupuesto)
+    if (prendaElegida.getPrecio() > m_presupuesto)
     {
-        return true;
+        return false;
     }
+
+    if (prendaElegida.getEstilo() != m_estilo)
+    {
+        return false;
+    }
+
+    if (m_nombre == "Ana")
+    {
+        return (categoria == 3 && prendaCat == 0);
+    }
+    else if (m_nombre == "Maria")
+    {
+        return (categoria == 0);
+    }
+    else if (m_nombre == "Sofia")
+    {
+        return (categoria == 1);
+    }
+    else if (m_nombre == "Laura")
+    {
+        return (categoria == 3 && prendaCat == 1);
+    }
+    else if (m_nombre == "Julia")
+    {
+        return (categoria == 2);
+    }
+
     return false;
 }
 
@@ -101,9 +128,9 @@ void Clienta::draw(WINDOW *win, int opcion)
         mvwaddstr(win, 15, 4, "     M @@@@@300IIIIId00ddII@@@@       ");
         mvwaddstr(win, 16, 4, "        @@@3@|0IIIIM00M>III@J@@       ");
         mvwaddstr(win, 17, 4, "        >@@IdIIIIIII@adJII>->@@       ");
-        mvwaddstr(win, 18, 4, "        M OIIII--IIIIIIIII>I\"        ");
-        mvwaddstr(win, 19, 4, "          \"IIIIIIIIIIIIII            ");
-        mvwaddstr(win, 20, 4, "            III--IIIIII\"             ");
+        mvwaddstr(win, 18, 4, "        M OIIII--IIIIIIIII>I--        ");
+        mvwaddstr(win, 19, 4, "          --IIIIIIIIIIIIII            ");
+        mvwaddstr(win, 20, 4, "            III--IIIIII--             ");
         mvwaddstr(win, 21, 4, "              IIIIII-{M               ");
         mvwaddstr(win, 22, 4, "       JJJJO@@@@OMM@@@@aJOOOOO        ");
         mvwaddstr(win, 23, 4, "     MM@@@@@@ac@@@@@@@MMJ@@@@@MMMM    ");
@@ -125,7 +152,7 @@ void Clienta::draw(WINDOW *win, int opcion)
         mvwaddstr(win, 11, 4, "       ####################-#           ");
         mvwaddstr(win, 12, 4, "       ######################           ");
         mvwaddstr(win, 13, 4, "       #######+##############           ");
-        mvwaddstr(win, 14, 4, "       #+-°+++++++°-+#######            ");
+        mvwaddstr(win, 14, 4, "       #+-+++++++-----+#######            ");
         mvwaddstr(win, 15, 4, "       ##xxx++++++xxx+#++#####          ");
         mvwaddstr(win, 16, 4, "        +-x. ++++-x  +++#####           ");
         mvwaddstr(win, 17, 4, "        ++++++++++++++++##+###          ");
@@ -166,7 +193,7 @@ void Clienta::draw(WINDOW *win, int opcion)
         mvwaddstr(win, 23, 4, "     :=* =*##+.::::::+=%#-+:*#       ");
         mvwaddstr(win, 24, 4, "   ++-%@ :**  . :::.  #%+* =*. **+   ");
         mvwaddstr(win, 25, 4, "   .*=@@+**#*   ::  .**# #:%*:-==*.  ");
-        mvwaddstr(win, 26, 4, "   **-%@=.=+ . : .  -@+.=::%¡¨=*==.  ");
+        mvwaddstr(win, 26, 4, "   **-%@=.=+ . : .  -@+.=::%¡-=*==.  ");
         mvwaddstr(win, 27, 4, "  %+*=%-+==* :=%::%--== =.:#+++. *   ");
         mvwaddstr(win, 28, 4, "  :.. ::.....:::. :......::::: . .:  ");
         wattroff(win, COLOR_PAIR(2));
