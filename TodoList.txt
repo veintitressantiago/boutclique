@@ -28,6 +28,7 @@ Que el negocio gane más vendiendo lo caro aunque no sea lo pedido, o que el cli
 con poco presupuesto nunca pueda llevarse lo que quiere.
 FIXME:
 Algunos caracteres se rompen en la ventana de las clientas, persisten caracteres del menu por ejemplo
+123456
 
 
 
