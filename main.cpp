@@ -148,7 +148,7 @@ void menu()
     mvprintw(17, 8, "                                                                                   I8                      ");
     mvprintw(18, 8, "                                                                                   I8                      ");
     attroff(COLOR_PAIR(6));
-    attron(COLOR_PAIR(3));
+    attron(COLOR_PAIR(5));
     mvprintw(7, 57, "  .-._   .-._..-.  ");
     mvprintw(8, 57, "..' (_)`-'    / (_)");
     mvprintw(9, 57, "|           /      ");
@@ -198,7 +198,7 @@ void menu()
     mvprintw(27, 1, "    @@    @@");
     mvprintw(28, 1, "    @:    @@");
     mvprintw(29, 1, "  :@=      @");
-    attroff(COLOR_PAIR(3));
+    attroff(COLOR_PAIR(5));
     mvprintw(16, 50, "   -.   ");
     mvprintw(17, 50, "   /    ");
     mvprintw(18, 50, "  /      Jugar");
@@ -671,8 +671,9 @@ void pantallaWin()
     mvaddch(9, 81, ACS_URCORNER);
     mvaddch(16, 38, ACS_LLCORNER);
     mvaddch(16, 81, ACS_LRCORNER);
-    mvhline(9, 40, ACS_HLINE, 40);
-    mvhline(16, 40, ACS_HLINE, 40);
+    
+    mvhline(9, 39, ACS_HLINE, 42);
+    mvhline(16, 39, ACS_HLINE, 42);
     mvvline(10, 38, ACS_VLINE, 6);
     mvvline(10, 81, ACS_VLINE, 6);
 
