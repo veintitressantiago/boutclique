@@ -1,5 +1,6 @@
 //Derene Juan Luciano
 //Stilitano Santiago
+//Valentina Mauro
 
 #include <iostream>
 #include <ncurses.h>
@@ -671,7 +672,6 @@ void pantallaWin()
     mvaddch(9, 81, ACS_URCORNER);
     mvaddch(16, 38, ACS_LLCORNER);
     mvaddch(16, 81, ACS_LRCORNER);
-    
     mvhline(9, 39, ACS_HLINE, 42);
     mvhline(16, 39, ACS_HLINE, 42);
     mvvline(10, 38, ACS_VLINE, 6);
